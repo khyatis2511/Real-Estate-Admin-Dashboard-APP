@@ -1,26 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
+import PrivateRoute from './components/container/privateRoute';
+import LayoutContextProvider from './components/contexts/layoutContext';
+import LoginController from './pages/login/login.controller';
+import DashboardController from './pages/dashboard/dashboard.controller';
+import Unauthorized from './components/container/unauthorized';
+import ForgotPasswordController from './pages/forgotPassword/forgotPassword.controller';
+import RegisterController from './pages/register/register.controller';
+import GlobalProvider from './lib/redux/GlobalProvider';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <GlobalProvider>
+        <LayoutContextProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute path="/" element={DashboardController} />
+              }
+            />
+            <Route path="/login" element={<LoginController />} />
+            <Route path="/register" element={<RegisterController />} />
+            <Route path="/forgot-password" element={<ForgotPasswordController />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+          </Routes>
+        </LayoutContextProvider>
+      </GlobalProvider>
+    </Router>
+  )
 }
 
-export default App;
+export default App
